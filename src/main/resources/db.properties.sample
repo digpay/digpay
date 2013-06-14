@@ -1,0 +1,9 @@
+db.driver = com.mysql.jdbc.Driver
+db.url = jdbc:mysql://localhost:3306/mysqldb1
+db.user = user1
+db.password = pass1
+
+db.amq.driver = com.mysql.jdbc.Driver
+db.amq.url = jdbc:mysql://localhost:3306/mysqldbamq
+db.amq.user = user1
+db.amq.password = pass1

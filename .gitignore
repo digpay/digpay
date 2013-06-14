@@ -1,4 +1,12 @@
+target/
+.settings/
+installLib/
+src/main/resources/*.properties
+
+*.bat
 *.class
+.classpath
+.project
 
 # Package Files #
 *.jar

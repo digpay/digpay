@@ -1,0 +1,27 @@
+{
+    "total_confirmed_amount": 645654654,
+	"total_amount": 999999999,
+	"sale" : {
+		"id": 123,
+		"btc_address": "Some address here",
+		"currency": "BTC",
+		"status": "PENDING",
+		"price": "432453665",
+		"description": "Some sample description"
+	},
+	"deposits": [
+		{
+			"id": 345,
+			"amount": 65465,
+			"time": 1565468678756,
+			"confirmations": 56,
+			"tx": "4235abc35f897"
+		}, {
+			"id": 345,
+			"amount": 65465,
+			"time": 13654646456,
+			"confirmations": 6,
+			"tx": "4235abc35f897"
+		}
+	]
+}
