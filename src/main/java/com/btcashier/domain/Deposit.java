@@ -29,7 +29,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -41,7 +40,7 @@ import com.btcashier.utils.json.DepositsJsonView;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name = "unique_transactionIdAndN", columnNames = { "transactionIdAndN" }))
+@Table(uniqueConstraints = @UniqueConstraint(name = "unq_transactionIdAndNAndBlockTime", columnNames = { "transactionIdAndNAndBlockTime" }))
 public class Deposit {
 
     public static final int BTC_FRACTION_LENGTH = 8;
@@ -63,8 +62,12 @@ public class Deposit {
     private Date updated;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ADDRESS_ID")
+    @JoinColumn(name = "address_id")
     private Address address;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "block_id", nullable = false)
+    private ProcessedBlock block;
 
     @Column(precision = 12, scale = 0)
     private BigInteger amount;
@@ -74,22 +77,19 @@ public class Deposit {
     private Long time;
 
     /**
-     * Will have this form: "transactionId:N", eg:
-     * 0c58341ad9b9846771c0be43bea903911d7e7bd3c5dea38ca4e684ba172821ab:1
-     * Where N is the index number of vout's.
+     * Will have this form: "transactionId:N:BlockTime", eg:
+     * 0c58341ad9b9846771c0be43bea903911d7e7bd3c5dea38ca4e684ba172821ab:1:1373019090
+     * Where N is the index number of vout's,
+     * BlockTime is the unix timestamp of the corresponding block creation.
      */
-    @Column(name = "transactionIdAndN")
-    @Index(name = "transactionIdAndNIndex")
-    private String transactionIdAndN;
+    @Column(name = "transactionIdAndNAndBlockTime")
+    @Index(name = "idx_transactionIdAndNAndBlockTime")
+    private String transactionIdAndNAndBlockTime;
 
     @Column(nullable = false)
     @Basic(optional = false)
     private Long numberConfirmations;
 
-    @Column(nullable = false)
-    @Basic(optional = false)
-    private Integer seenInBlock;
-    
     @PrePersist
     protected void onCreate() {
         updated = created = new Date();
@@ -121,12 +121,12 @@ public class Deposit {
         this.amount = amount;
     }
 
-    public String getTransactionIdAndN() {
-        return transactionIdAndN;
+    public String getTransactionIdAndNAndBlockTime() {
+        return transactionIdAndNAndBlockTime;
     }
 
-    public void setTransactionIdAndN(String transactionIdAndN) {
-        this.transactionIdAndN = transactionIdAndN;
+    public void setTransactionIdAndNAndBlockTime(String transactionIdAndNAndBlockTime) {
+        this.transactionIdAndNAndBlockTime = transactionIdAndNAndBlockTime;
     }
 
     @JsonView(DepositsJsonView.class)
@@ -158,15 +158,12 @@ public class Deposit {
 
     @JsonView(DepositsJsonView.class)
     /*package scope*/String getTx() {
-        return transactionIdAndN.split(":")[0];
+        return transactionIdAndNAndBlockTime.split(":")[0];
     }
-
-    public Integer getSeenInBlock() {
-        return seenInBlock;
-    }
-
-    public void setSeenInBlock(Integer seenInBlock) {
-        this.seenInBlock = seenInBlock;
+    
+    @JsonView(DepositsJsonView.class)
+    public boolean isCanceled() {
+        return block.isFork();
     }
 
     public Date getCreated() {
@@ -177,4 +174,24 @@ public class Deposit {
         return updated;
     }
 
+    
+    public ProcessedBlock getBlock() {
+        return block;
+    }
+
+    
+    public void setBlock(ProcessedBlock block) {
+        this.block = block;
+    }
+
+    
+    private void setCreated(Date created) {
+        this.created = created;
+    }
+
+    
+    private void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+    
 }

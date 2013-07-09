@@ -38,7 +38,7 @@ public class AuthToken {
     private Date createdAt;
     
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="MERCHANT_ID")
+    @JoinColumn(name="merchant_id")
     private Merchant merchant;
     
     public String getToken() {

@@ -34,13 +34,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class NewDepositJmsListenerTest {
     
-    private NewDepositJmsListener listener;
+    private DepositsChangeJmsListener listener;
     private Sale sale;
     private List<Deposit> deposits;
 
     @Before
     public void setUp() throws Exception {
-        listener = new NewDepositJmsListener();
+        listener = new DepositsChangeJmsListener();
         sale = new Sale();
         sale.setCurrency(Currency.BTC);
         sale.setDescription("Desc 1");
@@ -55,12 +55,12 @@ public class NewDepositJmsListenerTest {
         dep.setId(4324);
         dep.setNumberConfirmations(4L);
         dep.setTime(new Date().getTime());
-        dep.setTransactionIdAndN("ertefg2345fsdfwertwer:3");
+        dep.setTransactionIdAndNAndBlockTime("ertefg2345fsdfwertwer:3");
     }
 
     @Test
     public void testCreateJson() throws JsonProcessingException {
-        final String json = listener.createJson(sale, deposits, BigInteger.valueOf(100), BigInteger.valueOf(59));
+        final String json = listener.createJson(sale, deposits, BigInteger.valueOf(100), BigInteger.valueOf(59), BigInteger.ZERO);
         
         // TODO: add assertions
         

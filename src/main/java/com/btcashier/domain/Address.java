@@ -52,7 +52,7 @@ public class Address {
     private Sale sale;
     
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="MERCHANT_ID")
+    @JoinColumn(name="merchant_id")
     private Merchant merchant;
     
     public Address(String btcAddress) {
@@ -78,17 +78,14 @@ public class Address {
     public void setBtcAddress(String btcAddress) {
         this.btcAddress = btcAddress;
     }
-
     
     public Sale getSale() {
         return sale;
     }
 
-    
     public void setSale(Sale sale) {
         this.sale = sale;
     }
-
     
     public Merchant getMerchant() {
         return merchant;

@@ -28,7 +28,7 @@ public interface DepositDao extends AbstractJpaDao<Integer, Deposit> {
     
     List<Deposit> getAllForAddress(Address address);
     
-    Deposit getByTransactionIdAndN(String transactionIdAndN);
+    Deposit getNotForkedByTransactionIdAndNAndBlockTime(String transactionIdAndNAndBlockTime);
     
     List<Deposit> getAllBySaleOrderedByDateDesc(Sale sale);
     

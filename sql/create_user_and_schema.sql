@@ -23,7 +23,8 @@ INSERT INTO `notifierdb`.`sale`
 `status`,
 `price`,
 `description`,
-`MERCHANT_ID`)
+`MERCHANT_ID`,
+`merchantSaleId`)
 VALUES
 (
 '1',
@@ -31,6 +32,7 @@ VALUES
 'PENDING',
 '123456',
 'Item1',
+'1',
 '1'
 );
 
@@ -40,7 +42,8 @@ INSERT INTO `notifierdb`.`sale`
 `status`,
 `price`,
 `description`,
-`MERCHANT_ID`)
+`MERCHANT_ID`,
+`merchantSaleId`)
 VALUES
 (
 '2',
@@ -48,7 +51,8 @@ VALUES
 'PENDING',
 '345678',
 'Item1',
-'1'
+'1',
+'2'
 );
 
 

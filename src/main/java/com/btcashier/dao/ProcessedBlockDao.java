@@ -13,9 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.btcashier.domain.enums;
+package com.btcashier.dao;
 
-public enum Keys {
+import org.springframework.transaction.annotation.Transactional;
 
+import com.btcashier.domain.ProcessedBlock;
+
+@Transactional(readOnly = true)
+public interface ProcessedBlockDao extends AbstractJpaDao<Integer, ProcessedBlock> {
+    
+    public ProcessedBlock getLastProcessedBlock();
+    
+    public ProcessedBlock getNextProcessedBlock(ProcessedBlock previous);
+    
+    public ProcessedBlock getByHash(String hash);
+    
 
 }

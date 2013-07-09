@@ -63,11 +63,11 @@ public class NewBlocksListenerTest extends AbstractBtcTest {
         when(depositDao.increaseNumberOfConfirmations(anyInt())).thenReturn(0);
         listener.setDepositDao(depositDao);
 
-        final KeyValue kv = new KeyValue(Keys.PROCESSED_BLOCKS);
-        kv.setValue("999999999");
-        when(keyValueDao.getByKey(Keys.PROCESSED_BLOCKS)).thenReturn(kv);
-
-        listener.setKeyValueDao(keyValueDao);
+//        final KeyValue kv = new KeyValue(Keys.PROCESSED_BLOCKS);
+//        kv.setValue("999999999");
+//        when(keyValueDao.getByKey(Keys.PROCESSED_BLOCKS)).thenReturn(kv);
+//
+//        listener.setKeyValueDao(keyValueDao);
         listener.init();
     }
 

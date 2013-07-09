@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name="unique_merchant_id_and_merch_sale_id", columnNames = { "MERCHANT_ID", "merchantSaleId" }))
+@Table(uniqueConstraints = @UniqueConstraint(name="unique_merchant_id_and_merch_sale_id", columnNames = { "merchant_id", "merchantSaleId" }))
 public class Sale {
     
     @Id
@@ -55,7 +55,7 @@ public class Sale {
     private Address address;
     
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="MERCHANT_ID")
+    @JoinColumn(name="merchant_id")
     private Merchant merchant;
     
     @Enumerated(EnumType.STRING)

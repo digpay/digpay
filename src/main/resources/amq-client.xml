@@ -14,8 +14,6 @@
                            http://www.springframework.org/schema/mvc
         				   http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<!-- SENDER -->
-	<!-- a pooling based JMS provider -->
 	<bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
 		destroy-method="stop" depends-on="broker">
 		<constructor-arg>
@@ -23,28 +21,24 @@
 		</constructor-arg>
 	</bean>
 
-	<!-- Spring JMS Template -->
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory">
 			<ref local="jmsFactory" />
 		</property>
 	</bean>
-
-	<!-- this is the Message Driven POJO (MDP) -->
-	<bean id="messageListener" class="com.btcashier.listener.jms.NewDepositJmsListener" />
 	
 	<task:executor id="jmsTaskExecutor"
                 pool-size="5-15"
                 queue-capacity="100"/>
 
-	<!-- and this is the message listener container -->
-	<bean id="jmsContainer"
+	<bean id="depositsChangeJmsListener" class="com.btcashier.listener.jms.DepositsChangeJmsListener" />
+	<bean id="depositsChangeJmsContainer"
 		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="jmsFactory" />
-		<property name="destinationName" value="Q_NEW_DEPOSIT" />
-		<property name="messageListener" ref="messageListener" />
+		<property name="destinationName" value="Q_DEPOSITS_CHANGE" />
+		<property name="messageListener" ref="depositsChangeJmsListener" />
 		<property name="taskExecutor" ref="jmsTaskExecutor" />
 		<property name="concurrency" value="5-15"/>
 	</bean>
-
+	
 </beans>

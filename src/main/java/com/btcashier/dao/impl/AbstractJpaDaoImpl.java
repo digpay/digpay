@@ -23,9 +23,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
+
 import com.btcashier.dao.AbstractJpaDao;
 
 public abstract class AbstractJpaDaoImpl<K, E> implements AbstractJpaDao<K, E> {
+
+    private final static Logger log = Logger.getLogger(AbstractJpaDaoImpl.class);
 
     private Class<E> entityClass;
 
@@ -86,6 +90,9 @@ public abstract class AbstractJpaDaoImpl<K, E> implements AbstractJpaDao<K, E> {
         if (null == list || list.size() == 0) {
             return null;
         } else {
+            if (list.size() > 1) {
+                log.warn("More than one element in obtainFirst(): " + list.size() + " [" + list + "]");
+            }
             return list.get(0);
         }
     }

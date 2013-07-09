@@ -43,16 +43,16 @@ public class DepositDaoImpl extends AbstractJpaDaoImpl<Integer, Deposit> impleme
     }
 
     @Override
-    public Deposit getByTransactionIdAndN(String transactionIdAndN) {
-        final Query q = em.createQuery("select d from Deposit d where d.transactionIdAndN = :transactionIdAndN", Deposit.class);
-        q.setParameter("transactionIdAndN", transactionIdAndN);
+    public Deposit getNotForkedByTransactionIdAndNAndBlockTime(String transactionIdAndNAndBlockTime) {
+        final Query q = em.createQuery("select d from Deposit d join d.block b where d.transactionIdAndNAndBlockTime = :transactionIdAndNAndBlockTime and b.fork = false", Deposit.class);
+        q.setParameter("transactionIdAndNAndBlockTime", transactionIdAndNAndBlockTime);
         final List<Deposit> deposits = q.getResultList();
         return obtainFirst(deposits);
     }
 
     @Override
     public List<Deposit> getAllBySaleOrderedByDateDesc(Sale sale) {
-        final Query q = em.createQuery("select d from Sale s join s.address a join a.deposits d where s = :sale order by d.time desc,d.id desc", Deposit.class);
+        final Query q = em.createQuery("select d from Sale s join s.address a join a.deposits d join fetch d.block where s = :sale order by d.updated desc,d.time desc,d.id desc", Deposit.class);
         q.setParameter("sale", sale);
         final List<Deposit> deposits = q.getResultList();
         return deposits;
@@ -80,7 +80,8 @@ public class DepositDaoImpl extends AbstractJpaDaoImpl<Integer, Deposit> impleme
         log.info("Deposit ids to update number of confirmations: " + depositIdsList);
 
         if (depositIdsList.size() > 0) {
-            final Query q = em.createQuery("update Deposit set numberConfirmations = 1 + :blockHeight - seenInBlock where id in (:depositIdsList) and numberConfirmations <> 1 + :blockHeight - seenInBlock");
+            //final Query q = em.createQuery("update Deposit set numberConfirmations = 1 + :blockHeight - seenInBlock where id in (:depositIdsList) and numberConfirmations <> 1 + :blockHeight - seenInBlock");
+            final Query q = em.createQuery("update Deposit d set d.numberConfirmations = 1 + :blockHeight - d.block.height where d.id in (:depositIdsList) and d.numberConfirmations <> 1 + :blockHeight - d.block.height");
             q.setParameter("blockHeight", blockHeight);
             q.setParameter("depositIdsList", depositIdsList);
             final int updates = q.executeUpdate();

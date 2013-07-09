@@ -31,19 +31,19 @@ import com.btcashier.domain.Deposit;
 @Component
 public class QueueHelper {
     
-    private static final String QUEUE_NAME_NEW_DEPOSIT = "Q_NEW_DEPOSIT";
+    private static final String QUEUE_NAME_DEPOSITS_CHANGE = "Q_DEPOSITS_CHANGE";
 
     private final static Logger log = Logger.getLogger(QueueHelper.class);
     
     @Autowired
     private JmsTemplate jmsTemplate;
     
-    public void queueNewDepositToProcess(Deposit dep) {
+    public void queueDepositsChangeToProcess(Deposit dep) {
         final Integer depId = dep.getId();
         log.info("Send JMS notification about new deposit id: " + depId);
-        jmsTemplate.send(QUEUE_NAME_NEW_DEPOSIT, new MessageCreator() {
+        jmsTemplate.send(QUEUE_NAME_DEPOSITS_CHANGE, new MessageCreator() {
             public Message createMessage(Session session) throws JMSException {
-                log.info("JMS notification almost send, deposit id: " + depId);
+                log.info("JMS notification about new deposit almost send, deposit id: " + depId);
                 return session.createObjectMessage(depId);
             }
         });
